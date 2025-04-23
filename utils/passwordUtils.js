@@ -16,6 +16,12 @@ module.exports = class PasswordUtils {
         }
     };
 
+    /**
+     * 
+     * @param {String} password [cleint password]
+     * @param {String} hash [hashed password from database]
+     * @returns {Boolean} [True or False]
+     */
     comparePassword = async (password, hash) => {
         try {
             const matchFound = await bcrypt.compare(password, hash);
