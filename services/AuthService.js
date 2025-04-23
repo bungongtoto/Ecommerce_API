@@ -40,7 +40,7 @@ module.exports = class AuthService {
      */
     async login(data) {
         try {
-            const { email, password } = data;
+            const { email, password : userpass} = data;
 
             //check if user exists
             const user = await UserModelInstance.findOneByEmail(email);
@@ -52,7 +52,7 @@ module.exports = class AuthService {
 
             // compare password
             const isMatch = await PasswordUtilsInstance.comparePassword(
-                password,
+                userpass,
                 user.password
             );
 
@@ -61,7 +61,9 @@ module.exports = class AuthService {
                 throw createError(401, "Invalid username or password");
             }
 
-            return user;
+            const {password, ...userWithoutPassword} = user
+
+            return userWithoutPassword;
         } catch (error) {
             throw createError(500, error);
         }

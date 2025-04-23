@@ -48,6 +48,7 @@ module.exports = (app, passport) => {
                     email: username,
                     password,
                 });
+
                 res.status(200).send(response);
             } catch (error) {
                 next(error);
