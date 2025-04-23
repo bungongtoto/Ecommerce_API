@@ -58,7 +58,7 @@ module.exports = class UserModel {
      */
     async findOneByEmail(email) {
         try {
-            const statement = "SELECT * FROM users WHERE email  = $1";
+            const statement = "SELECT users.id as id, users.email as email,users.password as password, users.telephone as telephone, roles.name as role FROM users JOIN roles ON users.role_id = roles.id WHERE email  = $1";
             const values = [email];
 
             //Execute SQL statement
@@ -81,7 +81,7 @@ module.exports = class UserModel {
      */
     async findOneById(id) {
         try {
-            const statement = "SELECT * FROM users WHERE id  = $1";
+            const statement = "SELECT users.id as id, users.email as email,users.password as password, users.telephone as telephone, roles.name as role FROM users JOIN roles ON users.role_id = roles.id WHERE users.id  = $1";
             const values = [id];
 
             //Execute SQL statement
