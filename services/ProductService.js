@@ -103,7 +103,7 @@ module.exports = class ProductService {
             const image = await ProductModelInstance.addImage(data);
 
             if (!image){
-                throw(500, "An Error occured")
+                throw createError(500, "An Error occured")
             }
 
             return image;
@@ -117,7 +117,7 @@ module.exports = class ProductService {
             const image = await ProductModelInstance.updateImage(data);
 
             if (!image){
-                throw(500, "An Error occured")
+                throw createError(500, "An Error occured")
             }
 
             return image;
@@ -131,7 +131,7 @@ module.exports = class ProductService {
             const deletedImage = await ProductModelInstance.deleteImage(data);
 
             if (!deletedImage){
-                throw(500, "An Error occured")
+                throw createError(500, "An Error occured")
             }
 
             return deletedImage;
@@ -159,13 +159,13 @@ module.exports = class ProductService {
             const checkReview = await ProductModelInstance.findOneReview(data);
 
             if (checkReview){
-                throw(409, "User already has review for this product");
+                throw createError(409, "User already has review for this product");
             }
 
             const review = await ProductModelInstance.createReview(data);
 
             if (!review){
-                throw(500, "An Error occured");
+                throw createError(500, "An Error occured");
             }
 
             return review;
@@ -180,13 +180,13 @@ module.exports = class ProductService {
             const review = await ProductModelInstance.findOneReview(data);
 
             if (!review){
-                throw(404, "No Such review found");
+                throw createError(404, "No Such review found");
             }
 
             const updatedReview = await ProductModelInstance.updateReview(data);
 
             if (!updatedReview){
-                throw(500, "An Error Occured");
+                throw createError(500, "An Error Occured");
             }
 
             return updatedReview;

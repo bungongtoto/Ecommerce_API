@@ -207,7 +207,6 @@ module.exports = class ProductModel {
     async findOneReview(data){
         try {
             const {product_id, user_id} = data;
-            console.log(product_id, user_id)
             const statement  = "SELECT * FROM product_reviews WHERE user_id = $1 AND product_id = $2";
             const values = [ user_id, product_id];
 
@@ -218,8 +217,7 @@ module.exports = class ProductModel {
             if (results.rows?.length){
                 return results.rows[0];
             }
-
-            console.log("returning null")
+            
             return null;
         } catch (error) {
             throw error;
