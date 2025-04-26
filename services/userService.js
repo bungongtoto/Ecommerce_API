@@ -27,7 +27,7 @@ module.exports = class UserService {
 
             return user;
         } catch (error) {
-            throw error;
+            throw createError(500, error);
         }
     }
 
@@ -42,7 +42,7 @@ module.exports = class UserService {
 
             return user;
         } catch (error) {
-            throw error;
+            throw createError(500, error);
         }
     }
 
@@ -68,7 +68,7 @@ module.exports = class UserService {
             return updatedAddress;
 
         } catch (error) {
-            throw error;
+            throw createError(500, error);
         }
      }
 }

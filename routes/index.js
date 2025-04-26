@@ -1,7 +1,10 @@
 const authRouter = require('./auth');
-const userRouter = require('./user')
+const userRouter = require('./user');
+const productRouter = require('./product');
+const categoryRouter = require('./category');
+
 const AuthorizationUtils = require('../utils/middlewares/AuthorizationUtils');
-const AuthorizationUtilsInstance = new AuthorizationUtils()
+const AuthorizationUtilsInstance = new AuthorizationUtils();
 
 module.exports = (app, passport) => {
     authRouter(app, passport);
@@ -10,5 +13,11 @@ module.exports = (app, passport) => {
     app.use(AuthorizationUtilsInstance.isAuthenticated);
 
     userRouter(app);
+    productRouter(app);
+
+
+    // This middleware makes sure only admin can access it
+    app.use(AuthorizationUtilsInstance.isAdmin);
+    categoryRouter(app);
 
 }
