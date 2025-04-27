@@ -63,4 +63,15 @@ module.exports = (app) => {
             next(error);
         }
     });
+
+
+    router.get('/checkout', async (req, res, next) => {
+        try {
+            const response = await CartServiceInstance.checkout(req.user.id);
+
+            res.status(200).send(response);
+        } catch (error) {
+            next(error)
+        }
+    });
 }

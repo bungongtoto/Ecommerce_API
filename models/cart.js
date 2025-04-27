@@ -81,7 +81,7 @@ module.exports = class CartModel {
                 return results.rows;
             }
 
-            return null;
+            return [];
 
         } catch (error) {
             throw error;

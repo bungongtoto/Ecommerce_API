@@ -16,6 +16,7 @@ module.exports = (app, passport) => {
     userRouter(app);
     productRouter(app);
     cartRouter(app);
+    //add for wish list
 
     // This middleware makes sure only admin can access it
     app.use(AuthorizationUtilsInstance.isAdmin);
