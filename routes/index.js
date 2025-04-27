@@ -3,6 +3,7 @@ const userRouter = require('./user');
 const productRouter = require('./product');
 const categoryRouter = require('./category');
 const cartRouter = require('./cart');
+const orderRouter = require('./order');
 
 const AuthorizationUtils = require('../utils/middlewares/AuthorizationUtils');
 const AuthorizationUtilsInstance = new AuthorizationUtils();
@@ -16,6 +17,7 @@ module.exports = (app, passport) => {
     userRouter(app);
     productRouter(app);
     cartRouter(app);
+    orderRouter(app)
     //add for wish list
 
     // This middleware makes sure only admin can access it

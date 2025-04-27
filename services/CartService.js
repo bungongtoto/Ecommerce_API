@@ -15,7 +15,7 @@ module.exports = class CartService {
         try {
             const cartItems = await CartModelInstance.findAllByUserId(user_id);
 
-            if (!cartItems){
+            if (cartItems.length === 0){
                 throw createError(404, "No items found in your card")
             } 
 
@@ -109,6 +109,7 @@ module.exports = class CartService {
     async checkout(user_id){
         try {
             const cartItems = await this.getCartItems(user_id);
+
             let total_price = 0;
             //computing the total price
             cartItems.forEach(cartItem => {
