@@ -1,0 +1,39 @@
+openapi: 3.0.1
+info:
+  title: Ecommerce API
+  version: 1.0.0
+  description: Ecommerce Web App API
+  contact:
+    email: john.doe@gmail.com
+    name: John Doe
+    url: https://labalab.co.uk
+  license:
+    name: MIT
+    url: https://test.co.uk
+paths:
+  /auth/register:
+    summary: register users
+    post:
+      tags:
+        - Users
+      description: creates and returns new user
+      operationId: createUser
+      requestBody:
+
+      responses:
+
+  /auth/login:
+    summary: authentication path
+    description: >-
+      local authentication with email and password  and third party
+      authentication with email
+  /auth/isLoggedIn:
+    summary: verifies users session
+    description: checks if a user has a session ie authenticated
+  /auth/logout:
+    summary: logout user from the system
+    description: clear user session and cookies
+
+tags:
+  - name: Users
+    description: system users
