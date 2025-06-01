@@ -1,103 +1,53 @@
 const express = require("express");
 const router = express.Router();
-const createError = require("http-errors");
 const AuthService = require("../services/AuthService");
 const AuthorizationUtils = require("../utils/middlewares/AuthorizationUtils");
+const { matchedData, checkSchema, checkExact } = require("express-validator");
 const {
-  matchedData,
-  validationResult,
-  checkSchema,
-  checkExact,
-} = require("express-validator");
+  registerSchema,
+  loginSchema,
+} = require("../utils/schemaValidators/auth");
+const {
+  ValidateSchemaResult,
+} = require("../utils/middlewares/ValidateSchemaResults");
 
 const AuthServiceInstance = new AuthService();
 const AuthorizationUtilsInstance = new AuthorizationUtils();
-
-//Schema validations to validate and sanitize inputs
-const registerSchema = checkExact(
-  checkSchema(
-    {
-      email: {
-        isEmail: {
-          errorMessage: "Must be a valid email address",
-        },
-        trim: true,
-      },
-      password: {
-        isLength: {
-          options: { min: 8 },
-          errorMessage: "password must be atleast 8 characters",
-        },
-      },
-    },
-    ["body"]
-  ),
-  {
-    message: "email and password required",
-  }
-);
-
-const loginSchema = checkExact(
-  checkSchema(
-    {
-      username: {
-        isEmail: {
-          errorMessage: "username  most be a valid email address",
-        },
-        trim: true,
-      },
-      password: {
-        notEmpty: true,
-      },
-    },
-    ["body"]
-  ),
-  {
-    message: "username and password required",
-  }
-);
 
 module.exports = (app, passport) => {
   app.use("/auth", router);
 
   //registration Endpoint
-  router.post("/register", registerSchema, async (req, res, next) => {
-    try {
-      const result = validationResult(req);
-      if (!result.isEmpty()) {
-        const newResult = result.array().map((err) => err.msg);
-        res.status(400).send({ error: newResult });
-        return;
+  router.post(
+    "/register",
+    registerSchema,
+    ValidateSchemaResult,
+    async (req, res, next) => {
+      try {
+        let data = matchedData(req);
+
+        // setting default role for customers
+        data = { ...data, role_id: 3 };
+
+        // register user with auth service
+        const response = await AuthServiceInstance.register(data);
+
+        // res with success message
+        res.status(201).send({ message: "new user registered" });
+      } catch (error) {
+        next(error);
       }
-
-      let data = matchedData(req);
-
-      // setting default role for customers
-      data = { ...data, role_id: 3 };
-
-      // register user with auth service
-      const response = await AuthServiceInstance.register(data);
-
-      // res with success message
-      res.status(201).send({ message: "new user registered" });
-    } catch (error) {
-      next(error);
     }
-  });
+  );
 
   //Login Endpoint
   router.post(
     "/login",
     loginSchema,
+    ValidateSchemaResult,
     passport.authenticate("local"),
     async (req, res, next) => {
       try {
-        const result = validationResult(req);
-        if (!result.isEmpty()) {
-          const newResult = result.array().map((err) => err.msg);
-          res.status(400).send({ error: newResult });
-          return;
-        }
         const { username, password } = matchedData(req);
 
         const response = await AuthServiceInstance.login({
@@ -113,7 +63,7 @@ module.exports = (app, passport) => {
   );
 
   //isLoggedIn Endpoint
-  router.get(
+  router.post(
     "/logged_in",
     AuthorizationUtilsInstance.isAuthenticated,
     (req, res) => {
