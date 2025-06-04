@@ -27,12 +27,12 @@ const productSchame = checkExact(
         notEmpty: {
           errorMessage: "quantity is required",
         },
-        isNumeric: {
+        isInt: {
           errorMessage: "Invalid quantity value",
         },
       },
       category_id: {
-        isNumeric: {
+        isInt: {
           errorMessage: "Invalid category_id",
         },
         notEmpty: {
