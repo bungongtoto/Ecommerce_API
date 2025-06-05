@@ -171,10 +171,12 @@ module.exports = class ProductService {
 
   async createReview(data) {
     try {
+      const timestamp = new Date(Date.now()).toISOString().split("T")[0];
+      data = { timestamp, ...data };
       const checkReview = await ProductModelInstance.findOneReview(data);
 
       if (checkReview) {
-        throw createError(409, "User already has review for this product");
+        return await this.updateReview(data);
       }
 
       const review = await ProductModelInstance.createReview(data);

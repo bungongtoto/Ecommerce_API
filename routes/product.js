@@ -14,6 +14,11 @@ const {
   deleteProductImageSchema,
 } = require("../utils/schemaValidators/product");
 
+const {
+  getReviewsSchema,
+  reviewSchema,
+} = require("../utils/schemaValidators/reviews");
+
 const ProductService = require("../services/ProductService");
 const ProductServiceInstance = new ProductService();
 
@@ -163,42 +168,57 @@ module.exports = (app) => {
     }
   );
 
-  router.post("/:product_id/reviews", async (req, res, next) => {
-    try {
-      const { product_id } = req.params;
-      const data = { product_id, user_id: req.user.id, ...req.body };
+  router.post(
+    "/:product_id/reviews",
+    AuthorizationUtilsInstance.isAuthenticated,
+    reviewSchema,
+    ValidateSchemaResult,
+    async (req, res, next) => {
+      try {
+        const { product_id } = req.params;
+        const data = { product_id, user_id: req.user.id, ...req.body };
 
-      const response = await ProductServiceInstance.createReview(data);
+        const response = await ProductServiceInstance.createReview(data);
 
-      res.status(201).send(response);
-    } catch (error) {
-      next(error);
+        res.status(201).send(response);
+      } catch (error) {
+        next(error);
+      }
     }
-  });
+  );
 
-  router.put("/:product_id/reviews", async (req, res, next) => {
-    try {
-      const { product_id } = req.params;
-      const data = { product_id, user_id: req.user.id, ...req.body };
+  // router.put(
+  //   "/:product_id/reviews",
+  //   AuthorizationUtilsInstance.isAuthenticated,
+  //   async (req, res, next) => {
+  //     try {
+  //       const { product_id } = req.params;
+  //       const data = { product_id, user_id: req.user.id, ...req.body };
 
-      const response = await ProductServiceInstance.updateReview(data);
+  //       const response = await ProductServiceInstance.updateReview(data);
 
-      res.status(200).send(response);
-    } catch (error) {
-      next(error);
+  //       res.status(200).send(response);
+  //     } catch (error) {
+  //       next(error);
+  //     }
+  //   }
+  // );
+
+  router.get(
+    "/:product_id/reviews",
+    getReviewsSchema,
+    ValidateSchemaResult,
+    async (req, res, next) => {
+      try {
+        const { product_id } = req.params;
+        const response = await ProductServiceInstance.getAllReviewByProductId(
+          product_id
+        );
+
+        res.status(200).send(response);
+      } catch (error) {
+        next(error);
+      }
     }
-  });
-
-  router.get("/:product_id/reviews", async (req, res, next) => {
-    try {
-      const { product_id } = req.params;
-      const response = await ProductServiceInstance.getAllReviewByProductId(
-        product_id
-      );
-
-      res.status(200).send(response);
-    } catch (error) {
-      next(error);
-    }
-  });
+  );
 };
