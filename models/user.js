@@ -103,4 +103,28 @@ module.exports = class UserModel {
       throw error;
     }
   }
+
+  /**
+   * Finds a user record by Google ID
+   * @param  {String}      id [Google ID]
+   * @return {Object|null}    [User Record]
+   */
+  async findOneByGoogleId(id) {
+    try {
+      // Generate SQL statement
+      const statement = `SELECT users.id as id, users.email as email, users.first_name as first_name, users.last_name as last_name, users.telephone as telephone, roles.name as role FROM users JOIN roles ON users.role_id = roles.id WHERE google ->> 'id' = $1`;
+      const values = [id];
+
+      // Execute SQL statment
+      const result = await db.query(statement, values);
+
+      if (result.rows?.length) {
+        return result.rows[0];
+      }
+
+      return null;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
 };

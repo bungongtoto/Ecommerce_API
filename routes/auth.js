@@ -97,4 +97,21 @@ module.exports = (app, passport) => {
       });
     }
   );
+
+  // Google Login Endpoint
+  router.get(
+    "/google",
+    passport.authenticate("google", { scope: ["profile"] })
+  );
+
+  // Google Login Callback Endpoint
+  router.get(
+    "/google/callback",
+    passport.authenticate("google", {
+      failureRedirect: "http://localhost:3000/auth",
+    }),
+    async (req, res) => {
+      res.redirect("http://localhost:3000/");
+    }
+  );
 };
